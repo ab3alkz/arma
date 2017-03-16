@@ -1,0 +1,35 @@
+.appBtn {
+    border: none
+}
+
+.webix_icon.fa-fa.fa-times {
+    color: red !important;
+}
+
+
+.slides-template {
+    height: 60px;
+    font-size: 30px;
+    border: 2px solid silver;
+    border-radius: 3px;
+    width: 110px;
+    cursor: pointer;
+}
+
+.slides-template > span {
+    display: inline-block;
+    color: #545454;
+    margin: 11px 10px ;
+}
+
+.slides-template > span.center {
+    margin: 11px 35px ;
+}
+
+.slides-template:hover {
+    border: 2px solid navy;
+}
+
+.selected .slides-template {
+    border: 2px solid blue;
+}
