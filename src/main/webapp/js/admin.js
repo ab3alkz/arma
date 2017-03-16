@@ -1,3 +1,15 @@
+var activeGameId;
+var slide;
+var slideTypeEnum = {
+    onlyText: "onlyText",
+    onlyImg: "onlyImg",
+    textSound: "textSound",
+    imgSound: "imgSound",
+    imgVideo: "imgVideo",
+    textVideo: "textVideo"
+};
+
+
 $(document).ready(function () {
     load();
 });
@@ -137,6 +149,8 @@ function getLastGame() {
 
 
 function createLastGameForm(gameId, gameName) {
+
+    activeGameId = gameId;
     $$("body").addView({
         id: "content",
         rows: [
@@ -313,6 +327,7 @@ function addSlide(gameId) {
             id: "addSlideWin",
             modal: true,
             position: "center",
+            selected: null,
             width: 650,
             head: {
                 cols: [
@@ -326,7 +341,7 @@ function addSlide(gameId) {
                         cols: [
                             {
                                 view: "icon", icon: "floppy-o", css: "buttonIcon", click: function () {
-                                addSlideWinSubmit(this, $$("addSlideForm"));
+                                addSlideWinSubmit(this);
                             }
                             },
                             {
@@ -369,14 +384,16 @@ function addSlide(gameId) {
     };
 }
 
+
+
 function getSlidesTemplateArr() {
     return [
-        {id: "onlyText", center: "fa-file-text-o"},
-        {id: "onlyImg", center: "fa-picture-o"},
-        {id: "textSound", left: "fa-file-text-o", right: "fa-volume-up"},
-        {id: "imgSound", left: "fa-picture-o", right: "fa-volume-up"},
-        {id: "imgVideo", left: "fa-picture-o", right: "fa fa-video-camera"},
-        {id: "textVideo", left: "fa-file-text-o", right: "fa fa-video-camera"}
+        {id: slideTypeEnum.onlyText, center: "fa-file-text-o"},
+        {id: slideTypeEnum.onlyImg, center: "fa-picture-o"},
+        {id: slideTypeEnum.textSound, left: "fa-file-text-o", right: "fa-volume-up"},
+        {id: slideTypeEnum.imgSound, left: "fa-picture-o", right: "fa-volume-up"},
+        {id: slideTypeEnum.imgVideo, left: "fa-picture-o", right: "fa fa-video-camera"},
+        {id: slideTypeEnum.textVideo, left: "fa-file-text-o", right: "fa fa-video-camera"}
     ];
 }
 
@@ -414,7 +431,21 @@ function selectTemplate(id) {
         }
 
     }
-
+    $$("addSlideWin").config.selected = id;
     $$("selectTemplate" + id).define("css", "selected");
     console.log(id);
+}
+
+function addSlideWinSubmit() {
+    var slideType = $$("addSlideWin").config.selected;
+    get_ajax('/arma/wr/admin/createSlide', 'GET', {slideType: slideType, game: activeGameId}, function (gson) {
+        if (gson && gson.result) {
+            if (gson.message)
+                slide = {id: gson.message, type: slideType}
+            //lse
+            //     createLastGameForm(null, null)
+        } else {
+            notifyMessage('Ошибка! ', gson.message, notifyType.danger);
+        }
+    });
 }

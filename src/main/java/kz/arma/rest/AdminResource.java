@@ -19,6 +19,8 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.SecurityContext;
 
+import java.math.BigDecimal;
+
 import static kz.arma.util.Util.getGsonResult;
 import static kz.arma.util.Util.objectToJson;
 
@@ -113,4 +115,13 @@ public class AdminResource {
     public String resetPassword(MultivaluedMap<String, String> formParams) {
         return objectToJson(adminSession.resetPassword(formParams.getFirst("uName"), formParams.getFirst("oldPass"), formParams.getFirst("newPass"), formParams.getFirst("confirmPass")));
     }
+
+
+    @GET
+    @Produces("application/json")
+    @Path("createSlide")
+    public String createSlide(@QueryParam("slideType") String slideType,@QueryParam("game") String game) {
+        return objectToJson(adminSession.getGroups());
+    }
+
 }
