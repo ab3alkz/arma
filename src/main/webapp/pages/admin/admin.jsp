@@ -13,7 +13,12 @@
     <link href="/arma/plugin/bootstrap-notify/animate.css" rel="stylesheet" type="text/css"/>
     <script src="/arma/plugin/bootstrap-notify/bootstrap-notify.min.js" type="text/javascript"></script>
     <script src="/arma/js/admin.js" type="text/javascript"></script>
+    <script src="/arma/js/common.js" type="text/javascript"></script>
     <script src="/arma/js/newutils.js?version=<%= new Date()%>" type="text/javascript"></script>
+
+
+    <script src="http://cdn.webix.com/components/ckeditor/ckeditor.js"></script>
+    <script src="http://cdn.webix.com/components/ckeditor/ckeditor/ckeditor.js"></script>
 </head>
 <body>
 <div id="menu">

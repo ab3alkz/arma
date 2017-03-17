@@ -157,4 +157,26 @@ public class AdminSession {
     public List<Slide> getSlidesList(String gameId) {
         return em.createNamedQuery("Slide.findByIdGame").setParameter("idGame", gameId).getResultList();
     }
+
+
+    public GsonResult createSlide(String slideType, String game) {
+        try {
+            Integer ord = (Integer) getSingleResultOrNull(
+                    em.createQuery(" SELECT max(s.ord) FROM Slide s where s.idGame = :idGame ")
+                            .setParameter("idGame", game)
+            );
+            if (ord == null) {
+                ord = 1;
+            }
+            Slide slide = new Slide();
+            slide.setId(createGuid());
+            slide.setType(slideType);
+            slide.setIdGame(game);
+            slide.setOrd(ord);
+            em.persist(slide);
+            return getGsonResult(true, slide.getId());
+        } catch (Exception e) {
+            return getGsonResult(true, e.toString());
+        }
+    }
 }

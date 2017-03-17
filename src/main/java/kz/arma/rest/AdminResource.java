@@ -121,7 +121,7 @@ public class AdminResource {
     @Produces("application/json")
     @Path("createSlide")
     public String createSlide(@QueryParam("slideType") String slideType,@QueryParam("game") String game) {
-        return objectToJson(adminSession.getGroups());
+        return objectToJson(adminSession.createSlide(slideType, game));
     }
 
 }

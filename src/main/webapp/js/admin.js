@@ -1,14 +1,7 @@
 var activeGameId;
 var slide;
-var slideTypeEnum = {
-    onlyText: "onlyText",
-    onlyImg: "onlyImg",
-    textSound: "textSound",
-    imgSound: "imgSound",
-    imgVideo: "imgVideo",
-    textVideo: "textVideo"
-};
 
+webix.codebase = "http://cdn.webix.com/components/mercury/"
 
 $(document).ready(function () {
     load();
@@ -16,6 +9,12 @@ $(document).ready(function () {
 
 function load() {
     form_init();
+    slide = {type: slideTypeEnum.onlyText};
+    slideEditWin();
+}
+
+window.onresize = function (e) {
+    slideEditWinResize();
 }
 
 
@@ -97,8 +96,8 @@ function createSlidesView(gameId) {
                         columns: [
                             {
                                 id: "slidesTable.code",
-                                template: "#code#",
-                                header: "Код",
+                                template: "#type#",
+                                header: "Тип",
                                 width: 90
                             },
                             {
@@ -117,7 +116,6 @@ function createSlidesView(gameId) {
                             },
                             onItemClick: function (id, e, trg) {
                                 selected = this.getSelectedItem();
-                                $$("slidesTableEdit").enable();
                             },
                             onItemDblClick: function (id, e, trg) {
                                 editaddGameWin();
@@ -314,12 +312,6 @@ function createArchiveGameTable() {
 }
 
 
-function addSlideWinResize() {
-
-    var cont_h = $(window).height();
-    var cont_w = $(window).width();
-}
-
 function addSlide(gameId) {
     if (!$$('addSlideWin')) {
         webix.ui({
@@ -385,7 +377,6 @@ function addSlide(gameId) {
 }
 
 
-
 function getSlidesTemplateArr() {
     return [
         {id: slideTypeEnum.onlyText, center: "fa-file-text-o"},
@@ -433,19 +424,106 @@ function selectTemplate(id) {
     }
     $$("addSlideWin").config.selected = id;
     $$("selectTemplate" + id).define("css", "selected");
-    console.log(id);
 }
 
 function addSlideWinSubmit() {
-    var slideType = $$("addSlideWin").config.selected;
+    var win = $$("addSlideWin");
+    var slideType = win.config.selected;
     get_ajax('/arma/wr/admin/createSlide', 'GET', {slideType: slideType, game: activeGameId}, function (gson) {
         if (gson && gson.result) {
-            if (gson.message)
-                slide = {id: gson.message, type: slideType}
-            //lse
+            if (gson.message) {
+                slide = {id: gson.message, type: slideType};
+                $$('slidesTable').parse(slide);
+                win.hide();
+                slideEditWin();
+            }
+            //else
             //     createLastGameForm(null, null)
         } else {
             notifyMessage('Ошибка! ', gson.message, notifyType.danger);
         }
     });
+}
+
+
+function slideEditWin() {
+    if (!$$('slideEditWin')) {
+        webix.ui({
+            view: "window",
+            id: "slideEditWin",
+            modal: true,
+            position: "center",
+            width: 650,
+            head: {
+                cols: [
+                    {width: 10},
+                    {view: "label", label: "Редактировать слайд"},
+                    {
+                        borderless: true,
+                        view: "toolbar",
+                        paddingY: 2,
+                        height: 40,
+                        cols: [
+                            {
+                                view: "icon", icon: "floppy-o", css: "buttonIcon", click: function () {
+                                slideEditWinSubmit(this);
+                            }
+                            },
+                            {
+                                view: "icon", icon: "fa fa-times", css: "buttonIcon", click: function () {
+                                this.getTopParentView().close();
+                                window.onscroll = null;
+                            }
+                            }
+                        ]
+                    }
+                ]
+            },
+            body: {
+                view: "form",
+                id: "slideEditForm",
+                rows: [
+                    getSlideBody()
+                ]
+            }
+        }).hide();
+    }
+    $$('slideEditWin').show();
+    var y = window.scrollY;
+    window.onscroll = function () {
+        window.scrollTo(0, y);
+    };
+    slideEditWinResize();
+}
+
+
+function slideEditWinResize() {
+    var win = $$('slideEditWin');
+    if (win) {
+        var cont_h = $(window).height() - 40;
+        var cont_w = $(window).width() - 40;
+        var form = $$('slideEditForm');
+        win.define("width", cont_w);
+        win.define("height", cont_h);
+        win.adjust();
+    }
+}
+
+function getSlideBody() {
+    if (slide) {
+        switch (slide.type) {
+            case slideTypeEnum.onlyText:
+                return getSlideBodyOnlyText();
+        }
+    }
+
+    return {view: "label", template: "не удалось распознать тип слайда"}
+}
+
+function getSlideBodyOnlyText() {
+    return {
+        id: "editor",
+        view: "mercury-editor",
+        value: "..." //text and HTML markup
+    }
 }

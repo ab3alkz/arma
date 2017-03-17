@@ -21,10 +21,19 @@ public class Slide {
     private String id;
     @Basic
     @Column(name = "type")
-    private int type;
+    private String type;
     @Basic
-    @Column(name = "question")
-    private String question;
+    @Column(name = "text")
+    private String text;
+    @Basic
+    @Column(name = "audio")
+    private byte[] audio;
+    @Basic
+    @Column(name = "video")
+    private byte[] video;
+    @Basic
+    @Column(name = "img")
+    private byte[] img;
     @Basic
     @Column(name = "answer")
     private String answer;
@@ -45,20 +54,44 @@ public class Slide {
         this.id = id;
     }
 
-    public int getType() {
+    public String getType() {
         return type;
     }
 
-    public void setType(int type) {
+    public void setType(String type) {
         this.type = type;
     }
 
-    public String getQuestion() {
-        return question;
+    public String getText() {
+        return text;
     }
 
-    public void setQuestion(String question) {
-        this.question = question;
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    public byte[] getAudio() {
+        return audio;
+    }
+
+    public void setAudio(byte[] audio) {
+        this.audio = audio;
+    }
+
+    public byte[] getVideo() {
+        return video;
+    }
+
+    public void setVideo(byte[] video) {
+        this.video = video;
+    }
+
+    public byte[] getImg() {
+        return img;
+    }
+
+    public void setImg(byte[] img) {
+        this.img = img;
     }
 
     public String getAnswer() {
