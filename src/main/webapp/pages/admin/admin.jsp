@@ -17,8 +17,7 @@
     <script src="/arma/js/newutils.js?version=<%= new Date()%>" type="text/javascript"></script>
 
 
-    <script src="http://cdn.webix.com/components/ckeditor/ckeditor.js"></script>
-    <script src="http://cdn.webix.com/components/ckeditor/ckeditor/ckeditor.js"></script>
+    <%--<script src="http://cdn.webix.com/components/mercury/mercury.js"></script>--%>
 </head>
 <body>
 <div id="menu">

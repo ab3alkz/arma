@@ -1,7 +1,6 @@
 var activeGameId;
 var slide;
 
-webix.codebase = "http://cdn.webix.com/components/mercury/"
 
 $(document).ready(function () {
     load();
@@ -9,7 +8,7 @@ $(document).ready(function () {
 
 function load() {
     form_init();
-    slide = {type: slideTypeEnum.onlyText};
+    slide = {id: "ebf0f173-2960-4b2a-b8fb-68ccb9c11c09", type: slideTypeEnum.onlyImg};
     slideEditWin();
 }
 
@@ -513,17 +512,31 @@ function getSlideBody() {
     if (slide) {
         switch (slide.type) {
             case slideTypeEnum.onlyText:
-                return getSlideBodyOnlyText();
+                return getSlideBodyText();
+            case slideTypeEnum.onlyImg:
+                return getSlideBodyImg();
         }
     }
 
     return {view: "label", template: "не удалось распознать тип слайда"}
 }
 
-function getSlideBodyOnlyText() {
+function getSlideBodyText() {
     return {
         id: "editor",
         view: "mercury-editor",
         value: "..." //text and HTML markup
+    }
+}
+function getSlideBodyImg() {
+    return {
+        view: "uploader",
+        id: "imgUploader",
+        value: "Upload file",
+        upload: "/arma/wr/admin/uploadImg",
+        datatype: "json",
+        formData: {
+            idSlide: slide.id
+        }
     }
 }

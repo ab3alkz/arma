@@ -19,6 +19,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.SecurityContext;
 
+import java.io.InputStream;
 import java.math.BigDecimal;
 
 import static kz.arma.util.Util.getGsonResult;
@@ -122,6 +123,14 @@ public class AdminResource {
     @Path("createSlide")
     public String createSlide(@QueryParam("slideType") String slideType,@QueryParam("game") String game) {
         return objectToJson(adminSession.createSlide(slideType, game));
+    }
+
+    @POST
+    @Produces("application/json")
+    @Path("uploadImg")
+    public String uploadImg(InputStream inputStream) {
+        inputStream
+        return objectToJson(null);
     }
 
 }
