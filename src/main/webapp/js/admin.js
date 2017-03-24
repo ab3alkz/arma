@@ -106,7 +106,13 @@ function createSlidesView(gameId) {
                             },
                             {
                                 id: "editBtn",
-                                template: "<span class='fa fa-pencil btn btn-error'  ></span>",
+                                template: "<span class='viewSlide fa fa-eye btn btn-success'  ></span>",
+                                header: "Заголовок",
+                                width:40
+                            },
+                            {
+                                id: "editBtn",
+                                template: "<span class='editSlide fa fa-pencil btn btn-error'  ></span>",
                                 header: "Заголовок",
                                 width:40
                             },
@@ -117,6 +123,11 @@ function createSlidesView(gameId) {
                                 width:40
                             }
                         ],
+                        onClick: {
+                            editSlide:function (v) {
+                                slideEditWin(this.getSelectedItem());
+                            }
+                        },
                         on: {
                             onAfterLoad: function () {
                                 this.hideOverlay();
@@ -125,10 +136,10 @@ function createSlidesView(gameId) {
                                     this.showOverlay("<span class='nodatafound'>Нет данных</span>");
                             },
                             onItemClick: function (id, e, trg) {
-                                selected = this.getSelectedItem();
+                                //selected = this.getSelectedItem();
                             },
                             onItemDblClick: function (id, e, trg) {
-                                editaddGameWin();
+
                             }
                         },
                         pager: "slidesTablePager"
@@ -458,47 +469,45 @@ function addSlideWinSubmit() {
 
 function slideEditWin(slide) {
 
-    if (!$$('slideEditWin')) {
-        webix.ui({
-            view: "window",
-            id: "slideEditWin",
-            modal: true,
-            position: "center",
-            width: 650,
-            head: {
-                cols: [
-                    {width: 10},
-                    {view: "label", label: "Редактировать слайд"},
-                    {
-                        borderless: true,
-                        view: "toolbar",
-                        paddingY: 2,
-                        height: 40,
-                        cols: [
-                            {
-                                view: "icon", icon: "floppy-o", css: "buttonIcon", click: function () {
-                                slideEditWinSubmit(this);
-                            }
-                            },
-                            {
-                                view: "icon", icon: "fa fa-times", css: "buttonIcon", click: function () {
-                                this.getTopParentView().close();
-                                window.onscroll = null;
-                            }
-                            }
-                        ]
-                    }
-                ]
-            },
-            body: {
-                view: "form",
-                id: "slideEditForm",
-                rows: [
-                    getSlideBody()
-                ]
-            }
-        }).hide();
-    }
+    webix.ui({
+        view: "window",
+        id: "slideEditWin",
+        modal: true,
+        position: "center",
+        width: 650,
+        head: {
+            cols: [
+                {width: 10},
+                {view: "label", label: "Редактировать слайд"},
+                {
+                    borderless: true,
+                    view: "toolbar",
+                    paddingY: 2,
+                    height: 40,
+                    cols: [
+                        {
+                            view: "icon", icon: "floppy-o", css: "buttonIcon", click: function () {
+                            slideEditWinSubmit(this);
+                        }
+                        },
+                        {
+                            view: "icon", icon: "fa fa-times", css: "buttonIcon", click: function () {
+                            this.getTopParentView().close();
+                            window.onscroll = null;
+                        }
+                        }
+                    ]
+                }
+            ]
+        },
+        body: {
+            view: "form",
+            id: "slideEditForm",
+            rows: [
+                getSlideBody(slide)
+            ]
+        }
+    }).hide();
     $$('slideEditWin').show();
     var y = window.scrollY;
     window.onscroll = function () {
@@ -520,13 +529,13 @@ function slideEditWinResize() {
     }
 }
 
-function getSlideBody() {
+function getSlideBody(slide) {
     if (slide) {
         switch (slide.type) {
             case slideTypeEnum.onlyText:
                 return getSlideBodyText();
             case slideTypeEnum.onlyImg:
-                return getSlideBodyImg();
+                return getSlideBodyImg(slide);
         }
     }
 
@@ -540,7 +549,7 @@ function getSlideBodyText() {
         value: "..." //text and HTML markup
     }
 }
-function getSlideBodyImg() {
+function getSlideBodyImg(slide) {
     return {
         view: "uploader",
         id: "imgUploader",
