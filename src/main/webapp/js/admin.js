@@ -1,5 +1,4 @@
 var activeGameId;
-var slide;
 
 
 $(document).ready(function () {
@@ -8,8 +7,8 @@ $(document).ready(function () {
 
 function load() {
     form_init();
-    slide = {id: "ebf0f173-2960-4b2a-b8fb-68ccb9c11c09", type: slideTypeEnum.onlyImg};
-    slideEditWin();
+    var slide = {id: "ebf0f173-2960-4b2a-b8fb-68ccb9c11c09", type: slideTypeEnum.onlyImg};
+    slideEditWin(slide);
 }
 
 window.onresize = function (e) {
@@ -104,6 +103,18 @@ function createSlidesView(gameId) {
                                 template: "#titleRus#",
                                 header: "Заголовок",
                                 fillspace: 1
+                            },
+                            {
+                                id: "editBtn",
+                                template: "<span class='fa fa-pencil btn btn-error'  ></span>",
+                                header: "Заголовок",
+                                width:40
+                            },
+                            {
+                                id: "editBtn",
+                                template: "<button class='fa fa-trash  btn btn-danger'  ></button>",
+                                header: "Заголовок",
+                                width:40
                             }
                         ],
                         on: {
@@ -431,10 +442,10 @@ function addSlideWinSubmit() {
     get_ajax('/arma/wr/admin/createSlide', 'GET', {slideType: slideType, game: activeGameId}, function (gson) {
         if (gson && gson.result) {
             if (gson.message) {
-                slide = {id: gson.message, type: slideType};
+                var slide = {id: gson.message, type: slideType};
                 $$('slidesTable').parse(slide);
                 win.hide();
-                slideEditWin();
+                slideEditWin(slide);
             }
             //else
             //     createLastGameForm(null, null)
@@ -445,7 +456,8 @@ function addSlideWinSubmit() {
 }
 
 
-function slideEditWin() {
+function slideEditWin(slide) {
+
     if (!$$('slideEditWin')) {
         webix.ui({
             view: "window",

@@ -129,7 +129,22 @@ public class AdminResource {
     @Produces("application/json")
     @Path("uploadImg")
     public String uploadImg(InputStream inputStream) {
-        inputStream
+       // inputStream
+        return objectToJson(null);
+    }
+
+    @POST
+    @Produces("application/json")
+    @Path("uploadVideo")
+    public String uploadVideo(InputStream inputStream) {
+       // inputStream
+        return objectToJson(null);
+    }
+    @POST
+    @Produces("application/json")
+    @Path("uploadSound")
+    public String uploadSound(InputStream inputStream) {
+       // inputStream
         return objectToJson(null);
     }
 
