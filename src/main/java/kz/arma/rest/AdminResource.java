@@ -6,6 +6,7 @@
 package kz.arma.rest;
 
 
+import com.sun.jersey.multipart.FormDataParam;
 import kz.arma.gson.GsonGames;
 import kz.arma.session.AdminSession;
 import kz.arma.wrapper.Serialization;
@@ -16,11 +17,10 @@ import javax.ejb.Stateless;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.SecurityContext;
-
 import java.io.InputStream;
-import java.math.BigDecimal;
 
 import static kz.arma.util.Util.getGsonResult;
 import static kz.arma.util.Util.objectToJson;
@@ -126,9 +126,13 @@ public class AdminResource {
     }
 
     @POST
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces("application/json")
     @Path("uploadImg")
-    public String uploadImg(InputStream inputStream) {
+    public String uploadImg(@FormDataParam("upload") InputStream ins,
+                             @FormDataParam("extension") String ext,
+                             @FormDataParam("filename") String fileName,
+                             @FormDataParam("sDocId") Long sDocId) {
        // inputStream
         return objectToJson(null);
     }

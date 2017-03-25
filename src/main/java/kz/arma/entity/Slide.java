@@ -26,12 +26,15 @@ public class Slide {
     @Column(name = "text")
     private String text;
     @Basic
+    @Lob
     @Column(name = "audio")
     private byte[] audio;
     @Basic
+    @Lob
     @Column(name = "video")
     private byte[] video;
     @Basic
+    @Lob
     @Column(name = "img")
     private byte[] img;
     @Basic
@@ -39,7 +42,8 @@ public class Slide {
     private String answer;
     @Basic
     @Column(name = "ord")
-    private int ord;    @Basic
+    private int ord;
+    @Basic
     @Column(name = "id_game")
     private String idGame;
 
